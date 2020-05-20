@@ -7,7 +7,7 @@ export function createGetter(field) {
   return (obj) => {
     if (!Object.keys(obj).length) return undefined;
     let storage = obj;
-    let path = field.split(".");
+    const path = field.split(".");
     for (let value of path) {
       storage = storage[value];
     }
