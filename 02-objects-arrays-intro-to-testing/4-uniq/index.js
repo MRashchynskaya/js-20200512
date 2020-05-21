@@ -3,6 +3,7 @@
  * @param {*[]} arr - the array of primitive values
  * @returns {*[]} - the new array with uniq values
  */
-export function uniq(arr) {
-
-}
+export const uniq = (arr) => {
+  if (!arr || !arr.length) return [];
+  return arr.filter((v, i) => arr.indexOf(v) === i);
+};
