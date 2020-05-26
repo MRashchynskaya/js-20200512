@@ -1,16 +1,20 @@
-export default class NotificationMessage {
-  constructor(message = "", { duration = 0, type = "" } = {}) {
-    this.message = message;
-    this.duration = duration / 1000;
-    this.timer = duration;
-    this.type = type;
+let isElementExist = false;
 
+export default class NotificationMessage {
+  constructor(message = "", { duration = 0, type = "" }) {
+    this.message = message;
+    this.duration = duration;
+    this.type = type;
     this.render();
+  }
+
+  get durationInSeconds() {
+    return this.duration / 1000;
   }
 
   get template() {
     return `
-      <div class="notification ${this.type}" style="--value:${this.duration}s">
+      <div class="notification ${this.type}" style="--value:${this.durationInSeconds}s">
         <div class="timer"></div>
         <div class="inner-wrapper">
           <div class="notification-header">${this.type}</div>
@@ -23,24 +27,26 @@ export default class NotificationMessage {
   }
 
   render() {
+    if (isElementExist) return;
+    isElementExist = true;
     const element = document.createElement("div");
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
   }
 
   show() {
-    // console.log(window.notification);
-    // console.log(this.isNotification);
     const bodyElement = document.querySelector("body");
     bodyElement.appendChild(this.element);
-    setTimeout(() => this.remove(), this.timer);
+    setTimeout(() => this.remove(), this.duration);
   }
 
   remove() {
     this.element.remove();
+    isElementExist = false;
   }
 
-  // destroy() {
-  //   this.remove();
-  // }
+  destroy() {
+    this.remove();
+    isElementExist = false;
+  }
 }
