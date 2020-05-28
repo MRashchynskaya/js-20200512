@@ -1,5 +1,3 @@
-let activeTable = null;
-
 const bodyEl = document.querySelector("body");
 export default class SortableTable {
   constructor(header, { data } = {}) {
