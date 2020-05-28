@@ -89,11 +89,8 @@ describe("dom-document-loading/sortable-table-v1", () => {
 
     const cellIndex = header.findIndex((obj) => obj.id === field);
     const { body } = sortableTable.subElements;
-    console.log(body);
     const firstRow = body.firstElementChild;
     const lastRow = body.lastElementChild;
-    console.log("first", firstRow.children[cellIndex].textContent);
-    console.log("last", lastRow.children[cellIndex].textContent);
     expect(firstRow.children[cellIndex].textContent).toEqual(
       "Детский велосипед Lexus Trike Racer Trike"
     );
@@ -124,7 +121,6 @@ describe("dom-document-loading/sortable-table-v1", () => {
     const field = "price";
 
     sortableTable.sort(field, "asc");
-    console.log(sortableTable.subElements);
     const cellIndex = header.findIndex((obj) => obj.id === field);
     const { body } = sortableTable.subElements;
     const firstRow = body.firstElementChild;
