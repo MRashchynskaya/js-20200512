@@ -1,7 +1,9 @@
-let isElementExist = false;
+let activeNotification = null;
+
+const bodyEl = document.querySelector("body");
 
 export default class NotificationMessage {
-  constructor(message = "", { duration = 0, type = "" }) {
+  constructor(message = "", { duration = 0, type = "" } = {}) {
     this.message = message;
     this.duration = duration;
     this.type = type;
@@ -27,26 +29,27 @@ export default class NotificationMessage {
   }
 
   render() {
-    if (isElementExist) return;
-    isElementExist = true;
+    if (activeNotification) {
+      activeNotification.remove();
+    }
     const element = document.createElement("div");
     element.innerHTML = this.template;
     this.element = element.firstElementChild;
+    activeNotification = this.element;
   }
 
-  show() {
-    const bodyElement = document.querySelector("body");
+  show(el = bodyEl) {
+    const bodyElement = el;
     bodyElement.appendChild(this.element);
     setTimeout(() => this.remove(), this.duration);
   }
 
   remove() {
     this.element.remove();
-    isElementExist = false;
   }
 
   destroy() {
     this.remove();
-    isElementExist = false;
+    activeNotification = null;
   }
 }
