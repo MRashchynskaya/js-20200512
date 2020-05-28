@@ -14,7 +14,9 @@ export default class SortableTable {
      <div data-element="productsContainer" class="products-list__container">
        <div class="sortable-table">
         ${this.templateTableHeader}
+        <div data-element="body" class="sortable-table__body">
         ${this.templateTableContent}
+        </div>
        </div>
      </div>
     `;
@@ -28,6 +30,9 @@ export default class SortableTable {
             return `
             <div class="sortable-table__cell" data-name='${id}' data-sortable='${sortable}'>
               <span>${title}</span>
+              <span class="sortable-table__sort-arrow">
+                  <span class="sort-arrow"></span>
+              </span>
             </div>
           `;
           })
@@ -37,33 +42,32 @@ export default class SortableTable {
   }
 
   get templateTableContent() {
-    return `
-      ${this.data
-        .map(({ title, price, sales }) => {
-          return `
-            <div data-element="body" class="sortable-table__body">
-              <a href="/products/3d-ochki-epson-elpgs03" class="sortable-table__row">
-                <div class="sortable-table__cell">
-                  <img class="sortable-table-image" alt="Image" src="">
-                </div>
-                <div class="sortable-table__cell">${title}</div>
-                <div class="sortable-table__cell"></div>
-                <div class="sortable-table__cell">${price}</div>
-                <div class="sortable-table__cell">${sales}</div>
-              </a>
-            </div>
-          `;
-        })
-        .join("")}
-    `;
+    return this.data
+      .map((dataItem) => {
+        let tableRow = this.header
+          .map((headerItem) => {
+            return headerItem.template
+              ? headerItem.template(dataItem[headerItem.id])
+              : `<div class="sortable-table__cell">${
+                  dataItem[headerItem.id]
+                }</div>`;
+          })
+          .join("");
+        return `<a href="/products/${dataItem.id}" class="sortable-table__row">
+          ${tableRow}
+          </a>
+        `;
+      })
+      .join("");
   }
 
   render() {
     const node = document.createElement("div");
     node.innerHTML = this.templateTableContainer;
     this.element = node.firstElementChild;
-    this.subElements = this.templateTableContent;
-    console.log(this.subElements);
+    this.subElements = {};
+    this.subElements.body = document.createElement("div");
+    this.subElements.body.innerHTML = this.templateTableContent;
   }
 
   show(el = bodyEl) {
@@ -72,6 +76,7 @@ export default class SortableTable {
   }
 
   sort(fieldValue, orderValue) {
+    this.remove();
     const currentSortType = this.header.find((item) => item.id === fieldValue)
       .sortType;
     if (currentSortType === "number") {
@@ -91,7 +96,6 @@ export default class SortableTable {
         }
       });
     }
-    this.remove();
     this.render();
     this.show();
   }
