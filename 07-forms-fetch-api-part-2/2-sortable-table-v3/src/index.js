@@ -31,8 +31,10 @@ class SortableTable {
        <div class="sortable-table">
         ${this.templateTableHeader}
         <div data-element="body" class="sortable-table__body">
-        ${this.templateTableContent}
+          ${this.templateTableContent}
         </div>
+        ${this.getLoader()}
+        ${this.getEmptyPlaceholder()}
        </div>
      </div>
     `;
@@ -87,6 +89,24 @@ class SortableTable {
       .join("");
   }
 
+  getLoader() {
+    return `
+      <div
+        data-element='loading'
+        class='loading-line sortable-table__loading-line'
+      ></div>
+    `;
+  }
+
+  getEmptyPlaceholder() {
+    return `
+      <div
+        data-element='emptyPlaceholder'
+        class='sortable-table__empty-placeholder'
+      >No products</div>
+    `;
+  }
+
   async getData(url, query) {
     let response = await fetchJson(`${url}${query}`);
     this.data = response;
@@ -123,11 +143,11 @@ class SortableTable {
     currentSort._sort = targetCell.dataset.name;
     currentSort._order = currentSortParameter;
     const currentQuery = `?${new URLSearchParams(currentSort).toString()}`;
-    this.element.classList.add("sortable-table_loading");
-    this.subElements.body.innerHTML = "";
+    // не разобралась как должно работать переключение лоадинга и контента
+    this.element.firstElementChild.classList.add("sortable-table_loading");
     this.getData(this.url, currentQuery);
     targetCell.dataset.order = currentSortParameter;
-    this.element.classList.remove("sortable-table_loading");
+    this.element.firstElementChild.classList.remove("sortable-table_loading");
     const arrow = targetCell.querySelector(".sortable-table__sort-arrow");
     if (!arrow) {
       targetCell.append(this.subElements.arrow);
