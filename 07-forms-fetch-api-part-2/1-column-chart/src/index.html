@@ -19,42 +19,44 @@
     <script type="module">
       // import ColumnChart from './index.js';
       // TODO: remove
-      // import tooltip from "../../../06-events-practice/2-tooltip/solution";
-      import ColumnChart from '../solution/index.js';
+      import tooltip from "../../../05-events-practice/2-tooltip/src/index.js";
+      import ColumnChart from "./index.js";
 
       // tooltip.initialize();
 
       const ordersChart = new ColumnChart({
-        url: 'api/dashboard/orders',
+        url: "api/dashboard/orders",
         range: {
-          from: new Date('2020-04-06'),
-          to: new Date('2020-05-06'),
+          from: new Date("2020-04-06"),
+          to: new Date("2020-05-06"),
         },
-        label: 'orders',
-        link: '#'
+        label: "orders",
+        link: "#",
       });
 
-      loadOrders.addEventListener('click', event => {
-        ordersChart.update(new Date('2020-03-06'), new Date('2020-05-06'))
+      loadOrders.addEventListener("click", (event) => {
+        ordersChart.update(new Date("2020-05-02"), new Date("2020-05-08"));
+        salesChart.update(new Date("2020-05-02"), new Date("2020-05-08"));
+        customersChart.update(new Date("2020-05-02"), new Date("2020-05-08"));
       });
 
       const salesChart = new ColumnChart({
-        url: 'api/dashboard/sales',
+        url: "api/dashboard/sales",
         range: {
-          from: new Date('2020-04-06'),
-          to: new Date('2020-05-06'),
+          from: new Date("2020-04-06"),
+          to: new Date("2020-05-06"),
         },
-        label: 'sales',
-        formatHeading: data => `$${data}`
+        label: "sales",
+        formatHeading: (data) => `$${data}`,
       });
 
       const customersChart = new ColumnChart({
-        url: 'api/dashboard/customers',
+        url: "api/dashboard/customers",
         range: {
-          from: new Date('2020-04-06'),
-          to: new Date('2020-05-06'),
+          from: new Date("2020-04-06"),
+          to: new Date("2020-05-06"),
         },
-        label: 'customers',
+        label: "customers",
       });
 
       orders.append(ordersChart.element);
